@@ -1,8 +1,10 @@
 import "./App.css";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import InputTodo from "./components/InputTodo";
 import TodoItem from "./components/TodoItem";
+import SearchTodo from "./components/SearchTodo";
+import useDebounce from "./components/useDebounce";
 
 type Todo = {
   id: string;
@@ -17,61 +19,91 @@ function App() {
     completed: false,
   });
   const [todoList, setTodoList] = useState<Todo[]>([]);
+  const [searchText, setSearchText] = useState<string>("");
 
-  const handleGetTodo = (value: string) => {
-    const todo = {
+ 
+  const debouncedSearchText = useDebounce(searchText, 500);
+
+  const handleGetTodo = useCallback((value: string) => {
+    console.log("Get to do");
+
+    setTodo({
       id: uuidv4(),
       name: value,
       completed: false,
-    };
-    setTodo(todo);
-  };
-
-  const handleAddTodo = () => {
-    let ar = [...todoList];
-    ar.unshift(todo);
-    setTodoList(ar);
-    // setTodoList((prev) => [todo, ...prev]);
-    setTodo({
-      id: "",
-      name: "",
-      completed: false,
     });
-  };
+  }, []);
 
-  const handleDeleteTodo = (id: string) => {
-    const newTodoList = todoList.filter((todo) => todo.id !== id);
-    setTodoList(newTodoList);
-  };
+  const handleAddTodo = useCallback(() => {
+    console.log("Add to do");
 
-  const handleCompleteTodo = (id: string) => {
-    let newaar = todoList.map((todo) => {
-      if (todo.id === id) {
-        return {
-          ...todo,
-          completed: !todo.completed,
-        };
-      }
-      return todo;
-    });
-    setTodoList(newaar);
-  };
+    if (todo.name.trim()) {
+      const ar = [...todoList];
+      ar.unshift(todo);
+      setTodoList(ar);
+      setTodo({
+        id: "",
+        name: "",
+        completed: false,
+      });
+    }
+  }, [todo, todoList]);
+
+  const handleDeleteTodo = useCallback((id: string) => {
+    console.log("Delete to do");
+
+    setTodoList((prev) => prev.filter((todo) => todo.id !== id));
+  }, []);
+
+  const handleCompleteTodo = useCallback((id: string) => {
+    console.log("Complete to do");
+
+    setTodoList((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  }, []);
+
+  const handleEditTodo = useCallback((id: string, newName: string) => {
+    console.log("Edit todo");
+
+    setTodoList((prev) =>
+      prev.map((todo) =>
+        todo.id === id ? { ...todo, name: newName } : todo
+      )
+    );
+  }, []);
+
+  const todosToShow = useMemo(() => {
+    console.log("Re-render Memo");
+
+    if (debouncedSearchText.trim() === "") {
+      return todoList;
+    }
+
+    return todoList.filter((todo) =>
+      todo.name.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    );
+  }, [todoList, debouncedSearchText]);
 
   return (
     <>
+      <SearchTodo searchText={searchText} onSearch={setSearchText} />
       <InputTodo
         a={<h1>Todo List</h1>}
         todo={todo}
         onGetTodo={handleGetTodo}
         onAddTodo={handleAddTodo}
       />
-
       <ul>
-        {todoList.map((todo) => (
+        {todosToShow.map((todo) => (
           <TodoItem
+            key={todo.id}
             todo={todo}
             onCompleted={handleCompleteTodo}
             onDelete={handleDeleteTodo}
+            onEdit={handleEditTodo}
           />
         ))}
       </ul>

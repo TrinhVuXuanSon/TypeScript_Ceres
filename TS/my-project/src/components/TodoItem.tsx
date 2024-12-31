@@ -8,9 +8,10 @@ type TodoItemProps = {
     todo: Todo;
     onCompleted: (id:string) => void;
     onDelete: (id:string) => void;
+    onEdit: (id:string, newName: string) => void;
 }
 
-function TodoItem({ todo, onCompleted, onDelete }: TodoItemProps) {
+function TodoItem({ todo, onCompleted, onDelete, onEdit }: TodoItemProps) {
     return (
         <>
             <li
@@ -35,6 +36,12 @@ function TodoItem({ todo, onCompleted, onDelete }: TodoItemProps) {
                 {todo.name}
               </span>
             </div>
+            <button
+              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              onClick={() => onEdit(todo.id, todo.name)}
+            >
+              Edit
+            </button>
             <button
               className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               onClick={() => onDelete(todo.id)}
