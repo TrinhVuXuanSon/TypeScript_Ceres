@@ -1,56 +1,36 @@
-type Todo = {
-    id: string;
-    name: string;
-    completed: boolean;
+import React from 'react';
+import { Todo } from '../../src/types/todo';
+
+interface TodoItemProps {
+  todo: Todo;
+  onCompleted: () => void;
+  onClick: () => void;
 }
 
-type TodoItemProps = {
-    todo: Todo;
-    onCompleted: (id:string) => void;
-    onDelete: (id:string) => void;
-    onEdit: (id:string, newName: string) => void;
-}
-
-function TodoItem({ todo, onCompleted, onDelete, onEdit }: TodoItemProps) {
-    return (
-        <>
-            <li
-            key={todo.id}
-            className="mb-2 flex items-center justify-between gap-4 bg-gray-100 p-2 rounded-md"
-          >
-            <div
-              className={`cursor-pointer flex items-center justify-between gap-2 ${todo.completed
-                  ? "line-through text-gray-500"
-                  : "text-black no-underline"} `               
-              }                
-              
-            >
-              <input
-                type="checkbox"
-                checked={todo.completed}
-                onChange={() => onCompleted(todo.id)}
-                aria-label="completed"
-                className="cursor-pointer"
-              />
-              <span onClick={() => onCompleted(todo.id)}>
-                {todo.name}
-              </span>
-            </div>
-            <button
-              className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-              onClick={() => onEdit(todo.id, todo.name)}
-            >
-              Edit
-            </button>
-            <button
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              onClick={() => onDelete(todo.id)}
-            >
-              Delete
-            </button>
-          </li>
-        </>
-    );
-}
+const TodoItem: React.FC<TodoItemProps> = ({ todo, onCompleted, onClick }) => {
+  return (
+    <li className="flex items-center gap-4 mb-2 p-2 bg-gray-50 rounded text-black">
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={onCompleted}
+        className="h-5 w-5"
+        title='Todo Item'
+      />
+      <span
+        className={`flex-1 ${todo.completed ? 'line-through text-gray-500' : ''}`}
+        onClick={onClick}
+      >
+        {todo.name}
+      </span>
+      <button 
+        onClick={onClick}
+        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+      >
+        View Details
+      </button>
+    </li>
+  );
+};
 
 export default TodoItem;

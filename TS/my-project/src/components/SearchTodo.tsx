@@ -1,4 +1,3 @@
-
 type SearchTodoProps = {
   searchText: string;
   onSearch: (value: string) => void;
@@ -16,7 +15,6 @@ function SearchTodo({ searchText, onSearch }: SearchTodoProps) {
           value={searchText}
           onChange={(e) => onSearch(e.target.value)}
         />
-
       </div>
     </div>
   );

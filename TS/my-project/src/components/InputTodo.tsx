@@ -1,36 +1,36 @@
-import React from "react";
+import React, { useState } from 'react';
 
-type Todo = {
-    name: string;
+interface InputTodoProps {
+  onSubmit: (value: string) => void;
 }
 
-type TodoItemProps = {
-    todo: Todo;
-    onGetTodo: (value: string) => void;
-    onAddTodo: () => void;
-    a: React.ReactNode;
-}
+const InputTodo: React.FC<InputTodoProps> = ({ onSubmit }) => {
+  const [value, setValue] = useState('');
 
-function InputTodo({ todo, onGetTodo, onAddTodo }: TodoItemProps) {    
+  const handleSubmit = () => {
+    if (value.trim()) {
+      onSubmit(value);
+      setValue('');
+    }
+  };
+
   return (
-    <div>
-      <div className="mb-4">
-        <input
-          type="text"
-          aria-label="inputTodo"
-          className="bg-cyan-50 p-2 text-black mr-2 rounded-md"
-          value={todo.name}
-          onChange={(e) => onGetTodo(e.target.value)}
-        />
-        <button
-          onClick={onAddTodo}
-          className="bg-cyan-500 text-white py-2 px-4"
-        >
-          Add
-        </button>
-      </div>
+    <div className="flex gap-2 mb-4">
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        className="flex-1 p-2 border rounded"
+        placeholder="Add new todo..."
+      />
+      <button 
+        onClick={handleSubmit}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Add Todo
+      </button>
     </div>
   );
-}
+};
 
 export default InputTodo;
