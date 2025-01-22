@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { InputTodoProps } from "../types/todo";
+// import { InputTodoProps } from "../types/todo";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../redux/todoSlice";
 
-const InputTodo = ({ onAdd }: InputTodoProps) => {
+const InputTodo = () => {
   const [text, setText] = useState("");
+  const dispatch = useDispatch();
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      onAdd(text);
+      dispatch(addTodo(text));
       setText("");
     }
   };

@@ -21,3 +21,19 @@ export interface TodoListProps {
 export interface InputTodoProps {
     onAdd: (value: string) => void;
   }
+
+export interface SearchBarProps {
+    onSearch: (searchTerm: string) => void;
+}
+
+export interface DetailsProps {
+  todos: Todo[];
+  onDelete: (id: string) => void;
+  onEdit: (id: string, newName: string) => void;
+}
+
+export interface HomePageProps {
+  todos: TodoListProps['todos'];
+  onAdd: (value: string) => void;
+  onSearch: (searchTerm: string) => void;
+}

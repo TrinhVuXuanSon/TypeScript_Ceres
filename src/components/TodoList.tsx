@@ -21,7 +21,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit }: TodoListProps) => {
           />
         ))}
       </div>
-      {completedTodos.length > 0 && (
+      {completedTodos.length >= 0 && (
         <div className="space-y-2">
           <h2 className="text-lg font-semibold">
             Đã hoàn thành ({completedTodos.length})
